@@ -1,21 +1,37 @@
 import { Worker } from "bullmq";
+import path from 'path';
+import fs from 'fs';
 import { QdrantVectorStore } from "@langchain/qdrant";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { Document } from "@langchain/core/documents";
+import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
+import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
+
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 const worker = new Worker(
   "Upload-PDF-Queue",
   async (job) => {
     try {
-      console.log(`Processing job ${job.data?.fileName}`);
-      const data = JSON.parse(job.data);
-      const { filePath, fileName, metadata = {} } = data;
+      
+      const data = JSON.parse(job?.data);
+      console.log({data})
+      const { filepath, filename, metadata = {} } = data;
+      console.log(`Processing job ${filename}`);
 
-      const fullPath = path.join(process.cwd(), "uploads", filePath);
+      const fullPath = path.join(process.cwd(), filepath);
       console.log(`Reading PDF from: ${fullPath}`);
 
       if (!fs.existsSync(fullPath)) {
-        throw new Error(`File not found at path: ${fullPath}`);
+        throw new Error(`File not found at path: ${filepath}`);
       }
 
       const loader = new PDFLoader(fullPath);
@@ -29,16 +45,17 @@ const worker = new Worker(
 
 
       const chunks = await textSplitter.splitDocuments(docs);
-      console.log(`Created ${chunks.length} chunks from the PDF`);
+      console.log(`Created ${chunks.length} chunks from the PDF`,chunks);
 
       const embeddings = new OpenAIEmbeddings({
-        openAIApiKey: process.env.OPENAI_API_KEY,
+        apiKey: process.env.OPENAI_API_KEY,
       });
 
 
       const vectorStore = new QdrantVectorStore(embeddings, {
+        
         url: process.env.QDRANT_URL || "http://localhost:6333",
-        collectionName: "documents",
+        collectionName: "uploaded-pdf-documents",
       });
 
       const enhancedChunks = chunks.map((chunk, i) => {
@@ -46,9 +63,9 @@ const worker = new Worker(
           pageContent: chunk.pageContent,
           metadata: {
             ...chunk.metadata,
-            fileName,
+            filename,
             chunkIndex: i,
-            documentId: data.documentId || `doc-${Date.now()}`,
+            documentId: data?.documentId || `doc-${Date.now()}`,
             ...metadata
           }
         });

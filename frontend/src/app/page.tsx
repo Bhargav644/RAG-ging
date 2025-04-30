@@ -13,6 +13,7 @@ export default function Home() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [messages, setMessages] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [chatLoading,setChatLoading]=useState(false)
   
   const handleFileSelect = async (file:any) => {
     setSelectedFile(file);
@@ -27,24 +28,13 @@ export default function Home() {
       })
 
       setIsProcessing(false)
-      
-      // Simulate PDF processing - replace with actual API call
-      // setTimeout(() => {
-      //   setIsProcessing(false);
-      //   setMessages([
-      //     { 
-      //       sender: "ai", 
-      //       content: `I've analyzed "${file.name}". What would you like to know about it?`
-      //     }
-      //   ]);
-      // }, 2000);
     } else {
       // Reset the chat when file is removed
       setMessages([]);
     }
   };
   
-  const handleSendMessage = (message) => {
+  const handleSendMessage = async(message:any) => {
     if (!message.trim() || !selectedFile) return;
     
     // Add user message
@@ -52,18 +42,43 @@ export default function Home() {
       ...messages,
       { sender: "user", content: message }
     ];
-    setMessages(newMessages);
+    setMessages(newMessages as any);
+    setChatLoading(true);
     
-    // Simulate AI response - replace with actual API call
-    setTimeout(() => {
+    try{
+
+      const response = await fetch(`http://localhost:8000/chat?query=${encodeURIComponent(message)}`);
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+
       setMessages([
         ...newMessages,
         { 
           sender: "ai", 
-          content: `This is a simulated response about the PDF "${selectedFile.name}". In a real implementation, this would be the AI's response about your query: "${message}"`
+          content: data.message,
+          // Optional: Include source documents if you want to display them
+          sourceDocs: data.docs
         }
-      ]);
-    }, 1000);
+      ] as any);
+
+    }
+    catch(error){
+      setMessages([
+        ...newMessages,
+        { 
+          sender: "ai", 
+          content: "Sorry, I encountered an error processing your request. Please try again."
+        }
+      ] as any);
+
+    }finally{
+      setChatLoading(false)
+    }
+    
   };
 
   return (
