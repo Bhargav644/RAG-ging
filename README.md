@@ -24,7 +24,7 @@ RAG-ging is a project built on the Retrieval-Augmented Generation (RAG) architec
 The frontend will be running at http://localhost:3000
 
 
-#### 3. Start Required Services with Docker
+#### 3. Start Required Services with Docker (try install docker desktop)
 
 ```bash
   colima start                     # if using Colima
