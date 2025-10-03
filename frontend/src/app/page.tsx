@@ -13,41 +13,39 @@ export default function Home() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [messages, setMessages] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [chatLoading,setChatLoading]=useState(false)
-  
-  const handleFileSelect = async (file:any) => {
+  const [chatLoading, setChatLoading] = useState(false);
+
+  const handleFileSelect = async (file: any) => {
     setSelectedFile(file);
-    
+
     if (file) {
       setIsProcessing(true);
       const formData = new FormData();
-      formData.append("pdf", file);
-      await fetch("http://localhost:8000/upload",{
-        method:"POST",
+      formData.append("file", file);
+      await fetch("http://localhost:8000/upload", {
+        method: "POST",
         body: formData,
-      })
+      });
 
-      setIsProcessing(false)
+      setIsProcessing(false);
     } else {
       // Reset the chat when file is removed
       setMessages([]);
     }
   };
-  
-  const handleSendMessage = async(message:any) => {
+
+  const handleSendMessage = async (message: any) => {
     if (!message.trim() || !selectedFile) return;
-    
+
     // Add user message
-    const newMessages = [
-      ...messages,
-      { sender: "user", content: message }
-    ];
+    const newMessages = [...messages, { sender: "user", content: message }];
     setMessages(newMessages as any);
     setChatLoading(true);
-    
-    try{
 
-      const response = await fetch(`http://localhost:8000/chat?query=${encodeURIComponent(message)}`);
+    try {
+      const response = await fetch(
+        `http://localhost:8000/chat?query=${encodeURIComponent(message)}`
+      );
 
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
@@ -57,28 +55,25 @@ export default function Home() {
 
       setMessages([
         ...newMessages,
-        { 
-          sender: "ai", 
+        {
+          sender: "ai",
           content: data.message,
           // Optional: Include source documents if you want to display them
-          sourceDocs: data.docs
-        }
+          sourceDocs: data.docs,
+        },
       ] as any);
-
-    }
-    catch(error){
+    } catch (error) {
       setMessages([
         ...newMessages,
-        { 
-          sender: "ai", 
-          content: "Sorry, I encountered an error processing your request. Please try again."
-        }
+        {
+          sender: "ai",
+          content:
+            "Sorry, I encountered an error processing your request. Please try again.",
+        },
       ] as any);
-
-    }finally{
-      setChatLoading(false)
+    } finally {
+      setChatLoading(false);
     }
-    
   };
 
   return (
@@ -92,12 +87,12 @@ export default function Home() {
       <SignedIn>
         <main className="container mx-auto p-4 max-w-6xl flex-grow">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-            <PDFUploader 
+            <PDFUploader
               selectedFile={selectedFile}
               onFileSelect={handleFileSelect}
               isProcessing={isProcessing}
             />
-            
+
             <ChatInterface
               messages={messages}
               onSendMessage={handleSendMessage}
@@ -107,7 +102,7 @@ export default function Home() {
           </div>
         </main>
       </SignedIn>
-      
+
       <Footer />
     </div>
   );
