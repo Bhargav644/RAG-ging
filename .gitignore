@@ -2,3 +2,5 @@
 /backend/uploads
 
 /.env
+
+/backend/.env

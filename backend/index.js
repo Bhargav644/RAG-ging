@@ -34,7 +34,7 @@ const upload = multer({ storage });
 
 // Routes
 app.post("/upload", upload.single("file"), async (req, res) => {
-  console.log({here:req.file})
+  console.log({ here: req.file });
   await queue.add(
     "Upload-File",
     JSON.stringify({
@@ -72,4 +72,6 @@ Context: ${JSON.stringify(result)}`;
   });
 });
 
-app.listen(8000, () => console.log("🚀 Server running at http://localhost:8000"));
+app.listen(8000, () =>
+  console.log("🚀 Server running at http://localhost:8000")
+);

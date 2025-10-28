@@ -1,35 +1,62 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import React, { useState, KeyboardEvent } from 'react';
+import { ChatInputProps } from '@/app/types';
+import { Button } from '@/app/components/ui';
 
-export default function ChatInput({ onSendMessage, disabled }:any) {
-  const [inputMessage, setInputMessage] = useState("");
-  
-  const handleSubmit = (e:any) => {
+export default function ChatInput({
+  onSendMessage,
+  disabled,
+  placeholder = 'Ask a question...',
+}: ChatInputProps) {
+  const [inputMessage, setInputMessage] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputMessage.trim() || disabled) return;
-    
+
     onSendMessage(inputMessage);
-    setInputMessage("");
+    setInputMessage('');
   };
-  
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e as any);
+    }
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="flex">
+    <form onSubmit={handleSubmit} className="flex gap-3">
       <input
         type="text"
         value={inputMessage}
         onChange={(e) => setInputMessage(e.target.value)}
-        placeholder="Ask something about your PDF..."
+        onKeyDown={handleKeyDown}
+        placeholder={placeholder}
         disabled={disabled}
-        className="flex-1 p-3 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-indigo-300"
+        className="flex-1 px-5 py-3 border-2 border-gray-200 rounded-full bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-all disabled:bg-gray-100 disabled:text-gray-400 shadow-sm"
       />
-      <button
+      <Button
         type="submit"
         disabled={disabled || !inputMessage.trim()}
-        className="bg-indigo-600 text-white px-4 rounded-r-md hover:bg-indigo-700 disabled:bg-indigo-300 transition"
+        variant="primary"
+        size="md"
       >
-        Send
-      </button>
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+          />
+        </svg>
+      </Button>
     </form>
   );
 }
