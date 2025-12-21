@@ -27,12 +27,10 @@ export interface UploadResponse {
 /**
  * Upload a PDF file to the RAG system
  * @param file - PDF file to upload
- * @param authToken - Bearer token from Clerk authentication
  * @returns Upload response
  */
 export async function uploadPDF(
-  file: File,
-  authToken: string
+  file: File
 ): Promise<UploadResponse> {
   try {
     const formData = new FormData();
@@ -40,9 +38,6 @@ export async function uploadPDF(
 
     const response = await fetch(UPLOAD_API_URL, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
       body: formData,
     });
 

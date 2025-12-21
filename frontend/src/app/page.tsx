@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { SignedIn, SignedOut, useAuth } from '@clerk/nextjs';
+import { SignedIn, SignedOut } from '@clerk/nextjs';
 
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
@@ -17,7 +17,6 @@ export default function Home() {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | undefined>();
   const [isChatLoading, setIsChatLoading] = useState(false);
-  const { getToken } = useAuth();
 
   const handleFileSelect = async (file: File | null) => {
     if (!file) {
@@ -32,12 +31,7 @@ export default function Home() {
     setUploadError(undefined);
 
     try {
-      const token = await getToken();
-      if (!token) {
-        throw new Error('Authentication token not available');
-      }
-
-      const result = await uploadPDF(file, token);
+      const result = await uploadPDF(file);
 
       if (!result.success) {
         setUploadError(result.error);
