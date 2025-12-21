@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/", healthRoute);
 app.use("/rag", uploadRoutes, chatRoutes);
 
-app.use((req, res) => {
+app.use((_req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
