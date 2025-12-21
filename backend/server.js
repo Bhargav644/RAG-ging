@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 // Load environment variables first
 dotenv.config();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 9000;
 
 // Use dynamic import to ensure dotenv loads before app
 const spinServer = async () => {
