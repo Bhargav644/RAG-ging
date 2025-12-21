@@ -3,8 +3,9 @@
  * Handles all communication with the RAG backend
  */
 
-const UPLOAD_API_URL = "http://localhost:9000/rag/upload";
-const CHAT_API_URL = "http://localhost:9000/rag/chat";
+const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:9000";
+const UPLOAD_API_URL = `${API_BASE_URL}/rag/upload`;
+const CHAT_API_URL = `${API_BASE_URL}/rag/chat`;
 
 export interface ChatSource {
   chunkIndex: number;
