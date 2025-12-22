@@ -2,10 +2,16 @@
  * Type definitions for the RAG Chat application
  */
 
+export type SearchMethod = 'hybrid' | 'semantic' | 'keyword';
+
 export interface ChatSource {
   chunkIndex: number;
   score: number;
   text: string;
+  foundBy?: SearchMethod;
+  vectorScore?: number;
+  bm25Score?: number;
+  matchedTerms?: string[];
 }
 
 export interface Message {
