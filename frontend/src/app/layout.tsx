@@ -1,23 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Syne, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import { SignInButton, SignedIn, SignedOut } from "@clerk/clerk-react";
 import { ErrorBoundary } from './components/ErrorBoundary';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const syne = Syne({
   subsets: ["latin"],
+  variable: "--font-syne",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
+  variable: "--font-space",
 });
 
 export const metadata: Metadata = {
-  title: "RAG PDF Chat - Chat with Your Documents",
-  description: "Upload your PDFs and chat with AI to extract insights, get answers, and summarize content in natural language.",
+  title: "RAG PDF Chat - Brutalism",
+  description: "Chat with your documents. Stark. Simple. Powerful.",
 };
 
 export default function RootLayout({
@@ -29,7 +28,7 @@ export default function RootLayout({
     <ErrorBoundary>
       <ClerkProvider>
         <html lang="en">
-          <body className={`${geistSans.variable} ${geistMono.variable}`}>
+          <body className={`${syne.variable} ${spaceGrotesk.variable} antialiased min-h-screen flex flex-col overflow-x-hidden bg-white text-black`}>
            {children}
           </body>
         </html>

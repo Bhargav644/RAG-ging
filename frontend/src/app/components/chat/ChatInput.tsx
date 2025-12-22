@@ -7,7 +7,7 @@ import { Button } from '@/app/components/ui';
 export default function ChatInput({
   onSendMessage,
   disabled,
-  placeholder = 'Ask a question...',
+  placeholder = 'Query the system...',
 }: ChatInputProps) {
   const [inputMessage, setInputMessage] = useState('');
 
@@ -27,32 +27,35 @@ export default function ChatInput({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-3">
-      <input
-        type="text"
-        value={inputMessage}
-        onChange={(e) => setInputMessage(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder={placeholder}
-        disabled={disabled}
-        className="flex-1 px-5 py-3 border-2 border-gray-200 rounded-full bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-all disabled:bg-gray-100 disabled:text-gray-400 shadow-sm"
-      />
+    <form onSubmit={handleSubmit} className="flex gap-4 items-end">
+      <div className="flex-1 relative">
+        <input
+          type="text"
+          value={inputMessage}
+          onChange={(e) => setInputMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder={placeholder}
+          disabled={disabled}
+          className="w-full px-4 py-4 bg-white border-[3px] border-black text-black placeholder-gray-400 focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus:-translate-y-1 focus:-translate-x-1 transition-all text-sm font-space font-medium disabled:bg-gray-100 disabled:cursor-not-allowed"
+        />
+      </div>
       <Button
         type="submit"
         disabled={disabled || !inputMessage.trim()}
         variant="primary"
-        size="md"
+        size="lg"
+        className="h-[58px] px-6 aspect-square flex items-center justify-center shrink-0"
       >
         <svg
-          className="w-5 h-5"
+          className="w-6 h-6 transform rotate-90"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
         >
           <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
+            strokeLinecap="square"
+            strokeLinejoin="miter"
+            strokeWidth={3}
             d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
           />
         </svg>

@@ -90,30 +90,39 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex flex-col">
+    <div className="flex flex-col min-h-screen bg-white">
       <Header />
 
       <SignedOut>
-        <WelcomeScreen />
+        <div className="flex-1 flex flex-col pt-20">
+          <WelcomeScreen />
+        </div>
       </SignedOut>
 
       <SignedIn>
-        <main className="flex-1">
-          <div className="max-w-7xl mx-auto px-6 py-10">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-220px)] min-h-[600px]">
-              <PDFUploader
-                selectedFile={selectedFile}
-                onFileSelect={handleFileSelect}
-                isUploading={isUploading}
-                uploadError={uploadError}
-              />
+        {/* Main Content Area - Separated from Header/Footer */}
+        <main className="flex-1 flex flex-col pt-24 pb-10 w-full relative z-0">
+          <div className="flex-1 max-w-[1700px] w-full mx-auto px-6 lg:px-12">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full min-h-[700px]">
+              {/* Left Panel: Upload - Takes 4 columns */}
+              <div className="lg:col-span-4 flex flex-col h-full animate-slide-in-left">
+                 <PDFUploader
+                  selectedFile={selectedFile}
+                  onFileSelect={handleFileSelect}
+                  isUploading={isUploading}
+                  uploadError={uploadError}
+                />
+              </div>
 
-              <ChatInterface
-                messages={messages}
-                onSendMessage={handleSendMessage}
-                isLoading={isChatLoading}
-                disabled={!selectedFile || isUploading}
-              />
+              {/* Right Panel: Chat - Takes 8 columns */}
+              <div className="lg:col-span-8 flex flex-col h-full animate-slide-in-right delay-100">
+                <ChatInterface
+                  messages={messages}
+                  onSendMessage={handleSendMessage}
+                  isLoading={isChatLoading}
+                  disabled={!selectedFile || isUploading}
+                />
+              </div>
             </div>
           </div>
         </main>

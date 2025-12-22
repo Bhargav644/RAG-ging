@@ -23,25 +23,26 @@ export default function ChatInterface({
   }, [messages]);
 
   return (
-    <Card variant="elevated" className="h-full flex flex-col">
+    <Card variant="default" className="h-full flex flex-col bg-white border-[2px] border-black brutalist-shadow-sm">
       <CardHeader>
-        <CardTitle>Chat</CardTitle>
-        <p className="text-sm text-gray-500 mt-2">Ask questions about your PDF</p>
+        <CardTitle className="text-black font-syne">Neural Interface</CardTitle>
+        <p className="text-sm text-gray-500 mt-1 font-space">Ask questions about your PDF</p>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col min-h-0">
-        <div className="flex-1 overflow-y-auto mb-5 bg-gray-50 rounded-2xl p-6 border-2 border-gray-100">
+        <div className="flex-1 overflow-y-auto mb-5 bg-gray-50 rounded-none p-6 border-[2px] border-gray-200 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
           {messages.length > 0 ? (
-            <div className="space-y-4">
+            <div className="space-y-6">
               {messages.map((msg) => (
                 <ChatMessage key={msg.id} message={msg} />
               ))}
               {isLoading && (
-                <div className="flex justify-start">
-                  <div className="bg-white border-2 border-gray-200 rounded-3xl rounded-bl-md px-5 py-3 shadow-sm max-w-[80%]">
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                <div className="flex justify-start animate-fade-in">
+                  <div className="bg-white border-[2px] border-black px-5 py-4 max-w-[80%] flex items-center gap-2 brutalist-shadow-sm">
+                    <span className="text-sm text-black font-bold font-syne uppercase">Processing</span>
+                    <div className="flex items-center gap-1.5 ml-2">
+                      <div className="w-1.5 h-1.5 bg-black rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                      <div className="w-1.5 h-1.5 bg-black rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                      <div className="w-1.5 h-1.5 bg-black rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                     </div>
                   </div>
                 </div>
@@ -49,26 +50,29 @@ export default function ChatInterface({
               <div ref={messagesEndRef} />
             </div>
           ) : (
-            <div className="h-full flex flex-col items-center justify-center text-center">
-              <div className="w-16 h-16 rounded-full bg-white border-2 border-gray-200 flex items-center justify-center mb-4">
+            <div className="h-full flex flex-col items-center justify-center text-center p-6 opacity-60">
+              <div className="w-20 h-20 bg-white border-[2px] border-black flex items-center justify-center mb-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                 <svg
-                  className="w-8 h-8 text-gray-400"
+                  className="w-10 h-10 text-black"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
                   <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                    strokeLinecap="square"
+                    strokeLinejoin="miter"
                     strokeWidth={2}
                     d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                   />
                 </svg>
               </div>
-              <p className="text-sm font-medium text-gray-600">
+              <h3 className="text-xl font-bold text-black mb-2 uppercase font-syne">
+                {disabled ? 'System Idle' : 'System Ready'}
+              </h3>
+              <p className="text-sm font-medium text-gray-500 max-w-xs mx-auto leading-relaxed font-space">
                 {disabled
-                  ? 'Upload a PDF to start chatting'
-                  : 'Ask a question about your document'}
+                  ? 'Awaiting Source Material...'
+                  : 'Awaiting User Input...'}
               </p>
             </div>
           )}
@@ -77,7 +81,7 @@ export default function ChatInterface({
         <ChatInput
           onSendMessage={onSendMessage}
           disabled={disabled || isLoading}
-          placeholder={disabled ? 'Upload a PDF first...' : 'Ask a question...'}
+          placeholder={disabled ? 'Upload a PDF first...' : 'Query the system...'}
         />
       </CardContent>
     </Card>
