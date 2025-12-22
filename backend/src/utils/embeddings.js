@@ -44,9 +44,9 @@ const generateEmbeddingOfChunk = async (chunk, index, file, avgDocLength) => {
       fileId: file.filename,
       filename: file.originalname,
       chunkIndex: index,
-      // BM25 fields
+      // BM25 fields - termFrequencies must be JSON string for Pinecone
       tokens: bm25Metadata.tokens,
-      termFrequencies: bm25Metadata.termFrequencies,
+      termFrequencies: JSON.stringify(bm25Metadata.termFrequencies),
       docLength: bm25Metadata.docLength,
       avgDocLength: avgDocLength,
     },

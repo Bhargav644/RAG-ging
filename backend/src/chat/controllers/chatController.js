@@ -42,8 +42,12 @@ export const chatWithDoc = async (req, res) => {
     const allChunksResponse = await pineCodeIndex.query(allChunksQuery);
 
     // Convert Pinecone results to format needed for BM25
+    // Parse termFrequencies from JSON string back to object
     const documentsForBM25 = allChunksResponse.matches?.map(match => ({
       ...match.metadata,
+      termFrequencies: match.metadata.termFrequencies
+        ? JSON.parse(match.metadata.termFrequencies)
+        : {},
       pineconeScore: match.score
     })) || [];
 
