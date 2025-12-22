@@ -3,7 +3,10 @@ import path from "path";
 import { generateChunks } from "../../utils/chunk-generator.js";
 import { generateEmbeddingsWRTFile } from "../../utils/embeddings.js";
 import pineConeIndex from "../../config/pinecone.js";
-import pdfParse from "pdf-parse";
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+const { PDFParse } = require('pdf-parse');
 
 /**
  * Handles PDF file upload, text extraction, chunking, and embedding generation
@@ -21,10 +24,10 @@ const uploadFile = async (req, res) => {
 
     absolutePath = path.resolve(req.file.path);
 
-    // Read PDF file and parse text
-    const dataBuffer = fs.readFileSync(absolutePath);
-    const pdfData = await pdfParse(dataBuffer);
-    const text = pdfData.text;
+    // Read PDF file and parse text using PDFParse class
+    const parser = new PDFParse({ data: fs.readFileSync(absolutePath) });
+    const result = await parser.getText();
+    const text = result.text;
 
     if (!text || text.length === 0) {
       throw new Error("Could not extract text from PDF");
