@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/clerk-react";
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,12 +26,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className={`${geistSans.variable} ${geistMono.variable}`}>
-         {children}
-        </body>
-      </html>
-    </ClerkProvider>
+    <ErrorBoundary>
+      <ClerkProvider>
+        <html lang="en">
+          <body className={`${geistSans.variable} ${geistMono.variable}`}>
+           {children}
+          </body>
+        </html>
+      </ClerkProvider>
+    </ErrorBoundary>
   );
 }
