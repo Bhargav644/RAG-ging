@@ -5,6 +5,12 @@ import { generateEmbeddingsWRTFile } from "../../utils/embeddings.js";
 import pineConeIndex from "../../config/pinecone.js";
 import { PDFParse } from "pdf-parse";
 
+/**
+ * Handles PDF file upload, text extraction, chunking, and embedding generation
+ * @param {import('express').Request} req - Express request with file in req.file
+ * @param {import('express').Response} res - Express response
+ * @returns {Promise<void>} JSON response with upload status and chunk count
+ */
 const uploadFile = async (req, res) => {
   let absolutePath;
 
@@ -56,7 +62,7 @@ const uploadFile = async (req, res) => {
 
     res.status(500).json({
       message: "Error uploading file.",
-      error: error.message,
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error',
     });
   }
 };

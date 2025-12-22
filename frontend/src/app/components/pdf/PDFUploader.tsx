@@ -142,10 +142,15 @@ export default function PDFUploader({
           )}
 
           {isUploading && (
-            <div className="text-center py-4">
-              <div className="flex items-center justify-center gap-2">
+            <div className="border-2 border-blue-500 bg-blue-50 rounded-xl p-5">
+              <div className="flex items-center gap-3">
                 <Spinner size="sm" />
-                <p className="text-sm font-medium text-gray-600">Processing PDF...</p>
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-blue-900">Processing PDF...</p>
+                  <p className="text-xs text-blue-600 mt-1">
+                    Extracting text, generating embeddings, and storing in vector database
+                  </p>
+                </div>
               </div>
             </div>
           )}

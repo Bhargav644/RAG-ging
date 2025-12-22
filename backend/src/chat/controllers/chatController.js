@@ -2,6 +2,12 @@ import pineCodeIndex from "../../config/pinecone.js";
 import { generateEmbedding } from "../../utils/embeddings.js";
 import { generateResponseFromContext } from "../../utils/response-generator.js";
 
+/**
+ * Processes chat queries using RAG (Retrieval-Augmented Generation)
+ * @param {import('express').Request} req - Express request with question in body
+ * @param {import('express').Response} res - Express response
+ * @returns {Promise<void>} JSON response with AI answer and source chunks
+ */
 export const chatWithDoc = async (req, res) => {
   try {
     const { question, fileId } = req.body;
@@ -36,6 +42,10 @@ export const chatWithDoc = async (req, res) => {
         })) || [],
     });
   } catch (error) {
-    return res.status(500).json({ message: "Error processing chat request" });
+    console.error("Chat error:", error);
+    return res.status(500).json({
+      message: "Error processing chat request",
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error',
+    });
   }
 };

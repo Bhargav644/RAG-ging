@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ChatMessageProps } from '@/app/types';
 
 export default function ChatMessage({ message }: ChatMessageProps) {
   const { sender, content, sources } = message;
-  const [showSources, setShowSources] = useState(false);
 
   return (
     <div className={`flex ${sender === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -19,34 +18,24 @@ export default function ChatMessage({ message }: ChatMessageProps) {
         </div>
 
         {sources && sources.length > 0 && (
-          <div className="mt-3 ml-2">
-            <button
-              onClick={() => setShowSources(!showSources)}
-              className="text-xs font-medium text-gray-500 hover:text-black transition-colors px-3 py-1.5 rounded-full hover:bg-gray-100"
-            >
-              {showSources ? '▼' : '▶'} {sources.length} source{sources.length > 1 ? 's' : ''}
-            </button>
-
-            {showSources && (
-              <div className="mt-3 space-y-2">
-                {sources.map((source, idx) => (
-                  <div
-                    key={idx}
-                    className="bg-white border-2 border-gray-200 rounded-xl p-3 text-xs"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-semibold text-gray-900">
-                        Source {idx + 1}
-                      </span>
-                      <span className="text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full text-xs">
-                        {(source.score * 100).toFixed(1)}%
-                      </span>
-                    </div>
-                    <p className="text-gray-700 leading-relaxed line-clamp-3">{source.text}</p>
+          <div className="mt-3 pt-3 border-t border-gray-200">
+            <p className="text-xs font-semibold text-gray-500 mb-2">Sources:</p>
+            <div className="space-y-2">
+              {sources.map((source, idx) => (
+                <div
+                  key={idx}
+                  className="text-xs bg-gray-50 rounded-lg p-2 border border-gray-200"
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-medium text-gray-700">Chunk {source.chunkIndex}</span>
+                    <span className="text-blue-600 font-semibold">
+                      {(source.score * 100).toFixed(1)}% match
+                    </span>
                   </div>
-                ))}
-              </div>
-            )}
+                  <p className="text-gray-600 line-clamp-2">{source.text}</p>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
